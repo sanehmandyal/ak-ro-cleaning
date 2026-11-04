@@ -32,6 +32,7 @@ app.use(express.json({ limit: '1mb' }));
 
 app.get('/health', (_req, res) => res.json({ success: true, status: 'ok', time: new Date().toISOString() }));
 app.use('/api', routes);
+app.use(routes);
 app.use(notFound);
 app.use(errorHandler);
 
