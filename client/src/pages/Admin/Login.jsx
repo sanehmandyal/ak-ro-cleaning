@@ -19,8 +19,8 @@ export default function Login() {
   if (admin) return <Navigate to={location.state?.from || '/admin'} replace />;
 
   const fillAdmin = () => {
-    setValue('email', 'admin@example.com', { shouldValidate: true });
-    setValue('password', 'ChangeThisPassword123', { shouldValidate: true });
+    setValue('email', 'akrocleaning@gmail.com', { shouldValidate: true });
+    setValue('password', 'AkRoCleaning@2026#', { shouldValidate: true });
   };
 
   const onSubmit = async ({ email, password }) => {
@@ -34,32 +34,32 @@ export default function Login() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-navy-900 via-navy-800 to-brand-800 p-4">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-navy-950 via-navy-900 to-[#031e3d] p-4">
       <Seo title="Admin Login | Aqua Ak Enterprises" noindex />
-      <div className="card w-full max-w-md p-6 sm:p-8 shadow-2xl border border-white/10">
-        <Link to="/" className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-brand-600 mb-2">
+      <div className="card w-full max-w-md p-6 sm:p-8 shadow-2xl border border-aqua-500/20">
+        <Link to="/" className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-aqua-600 mb-2">
           <ArrowLeft className="h-3.5 w-3.5" /> Back to Website
         </Link>
         <LogoMark className="mx-auto h-14 w-14" />
-        <h1 className="mt-3 text-center text-2xl font-extrabold text-navy-900">Admin Control Panel</h1>
-        <p className="mt-1 text-center text-sm text-slate-500">Sign in to manage Aqua Ak Enterprises</p>
+        <h1 className="mt-3 text-center text-2xl font-extrabold text-navy-950">Aqua Ak Admin Portal</h1>
+        <p className="mt-1 text-center text-sm text-slate-500">Sign in to manage bookings, gallery & content</p>
 
         {/* Demo Credentials Quick Fill */}
-        <div className="mt-4 rounded-xl bg-slate-50 p-3 border border-slate-200">
+        <div className="mt-4 rounded-xl bg-aqua-50/60 p-3 border border-aqua-200/80">
           <div className="flex items-center justify-between text-xs">
-            <span className="font-semibold text-slate-700 flex items-center gap-1.5">
-              <KeyRound className="h-3.5 w-3.5 text-brand-600" /> Default Admin Login:
+            <span className="font-semibold text-navy-900 flex items-center gap-1.5">
+              <KeyRound className="h-3.5 w-3.5 text-aqua-600" /> AK RO Cleaning Admin:
             </span>
             <button
               type="button"
               onClick={fillAdmin}
-              className="font-bold text-brand-600 hover:text-brand-700 underline text-xs cursor-pointer"
+              className="font-bold text-aqua-600 hover:text-aqua-700 underline text-xs cursor-pointer"
             >
               Auto-fill credentials
             </button>
           </div>
-          <p className="mt-1 font-mono text-[11px] text-slate-500 truncate">
-            admin@example.com / ChangeThisPassword123
+          <p className="mt-1 font-mono text-[11px] text-slate-600 font-semibold truncate">
+            akrocleaning@gmail.com / AkRoCleaning@2026#
           </p>
         </div>
 

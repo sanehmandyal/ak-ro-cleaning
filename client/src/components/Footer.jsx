@@ -33,7 +33,7 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-navy-800 text-slate-300">
+    <footer className="bg-gradient-to-b from-navy-900 via-navy-950 to-[#020b17] border-t border-aqua-500/20 text-slate-300">
       <div className="container-x grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <Logo light />

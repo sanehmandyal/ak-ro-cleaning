@@ -75,12 +75,14 @@ export default function Navbar() {
   }, []);
 
   const linkClass = ({ isActive }) =>
-    `rounded-lg px-2.5 py-1.5 text-xs font-bold transition xl:text-sm ${
-      isActive ? 'text-brand-600 bg-brand-50/80 shadow-xs' : 'text-navy-800 hover:text-brand-600 hover:bg-slate-50'
+    `rounded-xl px-2.5 py-1.5 text-xs font-bold transition xl:text-sm ${
+      isActive
+        ? 'text-aqua-600 bg-aqua-50 shadow-sm border border-aqua-200/60'
+        : 'text-navy-900 hover:text-aqua-600 hover:bg-slate-50'
     }`;
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/95 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-aqua-100/70 bg-white/95 backdrop-blur-md shadow-xs">
       <div className="container-x flex h-16 items-center justify-between gap-3">
         <Logo />
 
@@ -98,10 +100,10 @@ export default function Navbar() {
             <button
               onClick={() => setServicesDropdown((s) => !s)}
               onMouseEnter={() => setServicesDropdown(true)}
-              className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-bold transition xl:text-sm ${
+              className={`inline-flex items-center gap-1 rounded-xl px-2.5 py-1.5 text-xs font-bold transition xl:text-sm ${
                 pathname.includes('/services') || pathname.includes('-cleaning')
-                  ? 'text-brand-600 bg-brand-50/80'
-                  : 'text-navy-800 hover:text-brand-600 hover:bg-slate-50'
+                  ? 'text-aqua-600 bg-aqua-50 border border-aqua-200/60'
+                  : 'text-navy-900 hover:text-aqua-600 hover:bg-slate-50'
               }`}
               aria-expanded={servicesDropdown}
             >

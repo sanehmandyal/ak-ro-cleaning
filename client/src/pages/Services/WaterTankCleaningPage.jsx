@@ -140,14 +140,15 @@ export default function WaterTankCleaningPage() {
       />
 
       {/* Hero Section */}
-      <section className="relative isolate overflow-hidden bg-navy-800 text-white">
+      <section className="relative isolate overflow-hidden bg-gradient-to-b from-navy-950 via-navy-900 to-navy-950 text-white">
         <Img
-          src="https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1600&q=80"
+          src="https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=1920&q=85"
           alt="Water tank cleaning equipment and sterile reservoir"
-          className="absolute inset-0 -z-20 h-full w-full object-cover"
+          className="absolute inset-0 -z-20 h-full w-full object-cover opacity-30 mix-blend-luminosity"
           eager
         />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-navy-950/95 via-navy-900/85 to-navy-800/60" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-navy-950/95 via-navy-900/85 to-navy-950/70" />
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_25%,rgba(6,182,212,0.2),transparent_45%)]" />
 
         <div className="container-x py-16 sm:py-24 lg:py-28">
           <nav aria-label="Breadcrumb" className="mb-4 text-xs font-semibold text-slate-300">

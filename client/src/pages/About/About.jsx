@@ -20,13 +20,14 @@ export default function About() {
       />
 
       {/* Hero */}
-      <section className="bg-navy-800 py-14 text-center sm:py-20 text-white">
+      <section className="bg-gradient-to-b from-navy-950 via-navy-900 to-navy-950 py-16 text-center sm:py-24 text-white relative isolate overflow-hidden border-b border-aqua-500/20">
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_0%,rgba(6,182,212,0.25),transparent_60%)]" />
         <div className="container-x">
-          <span className="glass mb-4 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-aqua-300">
+          <span className="glass mb-4 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-aqua-300 border border-aqua-400/30">
             <Sparkles className="h-3.5 w-3.5 text-aqua-400" /> Dedicated Hygiene Pioneers
           </span>
-          <h1 className="text-3xl font-extrabold !text-white sm:text-5xl">About {name}</h1>
-          <p className="mx-auto mt-4 max-w-2xl text-slate-300 leading-relaxed">{a.intro}</p>
+          <h1 className="text-3xl font-extrabold !text-white sm:text-5xl lg:text-6xl tracking-tight">About {name}</h1>
+          <p className="mx-auto mt-4 max-w-2xl text-slate-200 leading-relaxed text-base sm:text-lg">{a.intro}</p>
         </div>
       </section>
 

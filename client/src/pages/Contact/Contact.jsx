@@ -111,8 +111,8 @@ export default function Contact() {
       />
 
       {/* Hero Header */}
-      <section className="relative isolate overflow-hidden bg-navy-800 text-white">
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-navy-950 via-navy-900 to-navy-800" />
+      <section className="relative isolate overflow-hidden bg-gradient-to-b from-navy-950 via-navy-900 to-navy-950 text-white border-b border-aqua-500/20">
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_0%,rgba(6,182,212,0.25),transparent_60%)]" />
         <div className="container-x py-16 text-center sm:py-24">
           <span className="glass mb-4 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-aqua-300">
             <Zap className="h-3.5 w-3.5 text-aqua-400" /> Fast Doorstep Service Across All Sectors

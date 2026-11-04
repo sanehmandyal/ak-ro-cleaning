@@ -45,18 +45,18 @@ export default function AdminLayout() {
   if (!admin) return <Navigate to="/admin/login" replace state={{ from: pathname }} />;
 
   const sidebar = (
-    <div className="flex h-full flex-col bg-navy-800 text-slate-300">
+    <div className="flex h-full flex-col bg-gradient-to-b from-navy-950 via-navy-900 to-navy-950 text-slate-300 border-r border-aqua-500/15">
       <div className="flex h-16 items-center gap-2.5 border-b border-white/10 px-5">
         <LogoMark className="h-8 w-8" />
-        <span className="font-display font-extrabold text-white">Admin Panel</span>
+        <span className="font-display font-extrabold text-white">Aqua Ak Admin</span>
       </div>
       <nav className="flex-1 space-y-1 overflow-y-auto p-3" aria-label="Admin">
         {NAV.map(({ to, label, Icon, end, badge }) => (
           <NavLink key={to} to={to} end={end}
-            className={({ isActive }) => `flex min-h-[44px] items-center gap-3 rounded-xl px-3 text-sm font-semibold transition ${isActive ? 'bg-brand-600 text-white' : 'hover:bg-white/10 hover:text-white'}`}>
+            className={({ isActive }) => `flex min-h-[44px] items-center gap-3 rounded-xl px-3 text-sm font-semibold transition ${isActive ? 'bg-gradient-to-r from-aqua-400 to-brand-400 text-navy-950 font-bold shadow-glow' : 'hover:bg-white/10 hover:text-white'}`}>
             <Icon className="h-5 w-5 shrink-0" />
             <span className="flex-1">{label}</span>
-            {badge && counts[badge] > 0 && <span className="rounded-full bg-aqua-500 px-2 py-0.5 text-xs font-bold text-navy-900">{counts[badge]}</span>}
+            {badge && counts[badge] > 0 && <span className="rounded-full bg-aqua-400 px-2 py-0.5 text-xs font-bold text-navy-950">{counts[badge]}</span>}
           </NavLink>
         ))}
       </nav>

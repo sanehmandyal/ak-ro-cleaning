@@ -631,20 +631,17 @@ export async function seed(disconnectAfter = false) {
     await connectDB();
   }
 
-  const email = (process.env.ADMIN_EMAIL || 'admin@example.com').toLowerCase();
-  const password = process.env.ADMIN_PASSWORD || 'ChangeThisPassword123';
+  const email = (process.env.ADMIN_EMAIL || 'akrocleaning@gmail.com').toLowerCase();
+  const password = process.env.ADMIN_PASSWORD || 'AkRoCleaning@2026#';
 
-  if (!(await Admin.findOne({ email }))) {
-    await Admin.create({
-      name: process.env.ADMIN_NAME || 'Site Admin',
-      email,
-      password,
-      role: 'superadmin',
-    });
-    console.log(`Created admin ${email}`);
-  } else {
-    console.log('Admin already exists, skipped');
-  }
+  await Admin.deleteMany({});
+  await Admin.create({
+    name: process.env.ADMIN_NAME || 'AK RO Cleaning Admin',
+    email,
+    password,
+    role: 'superadmin',
+  });
+  console.log(`Created & updated superadmin credentials: ${email}`);
 
   // Update or replace services
   await Service.deleteMany({});
