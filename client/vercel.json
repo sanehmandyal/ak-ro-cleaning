@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/sitemap.xml", "destination": "https://YOUR-RENDER-SERVICE.onrender.com/api/sitemap.xml" },
+    { "source": "/((?!assets/|favicon.svg|robots.txt).*)", "destination": "/index.html" }
+  ]
+}
