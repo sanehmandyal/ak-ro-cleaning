@@ -43,29 +43,31 @@ async function start() {
   else console.warn('Cloudinary is not configured: image uploads will fail until CLOUDINARY_* env vars are set.');
   await connectDB();
   try {
-    const adminEmail = (process.env.ADMIN_EMAIL || 'akrocleaning@gmail.com').toLowerCase();
-    const adminPass = process.env.ADMIN_PASSWORD || 'AkRoCleaning@2026#';
-    let admin = await Admin.findOne({ email: adminEmail });
-    if (!admin) {
-      admin = await Admin.findOne();
-      if (admin) {
-        admin.email = adminEmail;
+    const adminEmail = (process.env.ADMIN_EMAIL || '').trim().toLowerCase();
+    const adminPass = process.env.ADMIN_PASSWORD || '';
+    if (adminEmail && adminPass) {
+      let admin = await Admin.findOne({ email: adminEmail });
+      if (!admin) {
+        admin = await Admin.findOne();
+        if (admin) {
+          admin.email = adminEmail;
+          admin.password = adminPass;
+          admin.name = process.env.ADMIN_NAME || 'Aqua Ak Enterprises Admin';
+          await admin.save();
+          console.log(`Updated admin account to ${adminEmail}`);
+        } else {
+          await Admin.create({
+            name: process.env.ADMIN_NAME || 'Aqua Ak Enterprises Admin',
+            email: adminEmail,
+            password: adminPass,
+            role: 'superadmin',
+          });
+          console.log(`Created admin account ${adminEmail}`);
+        }
+      } else if (process.env.SYNC_ADMIN_PASSWORD === 'true') {
         admin.password = adminPass;
-        admin.name = 'AK RO Cleaning Admin';
         await admin.save();
-        console.log(`Updated admin account to ${adminEmail}`);
-      } else {
-        await Admin.create({
-          name: 'AK RO Cleaning Admin',
-          email: adminEmail,
-          password: adminPass,
-          role: 'superadmin',
-        });
-        console.log(`Created admin account ${adminEmail}`);
       }
-    } else if (process.env.SYNC_ADMIN_PASSWORD === 'true') {
-      admin.password = adminPass;
-      await admin.save();
     }
   } catch (err) {
     console.warn('Admin sync notice:', err.message);

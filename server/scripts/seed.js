@@ -631,12 +631,12 @@ export async function seed(disconnectAfter = false) {
     await connectDB();
   }
 
-  const email = (process.env.ADMIN_EMAIL || 'akrocleaning@gmail.com').toLowerCase();
-  const password = process.env.ADMIN_PASSWORD || 'AkRoCleaning@2026#';
+  const email = (process.env.ADMIN_EMAIL || 'admin@example.com').toLowerCase();
+  const password = process.env.ADMIN_PASSWORD || 'ChangeThisPassword123#';
 
   await Admin.deleteMany({});
   await Admin.create({
-    name: process.env.ADMIN_NAME || 'AK RO Cleaning Admin',
+    name: process.env.ADMIN_NAME || 'Aqua Ak Enterprises Admin',
     email,
     password,
     role: 'superadmin',
