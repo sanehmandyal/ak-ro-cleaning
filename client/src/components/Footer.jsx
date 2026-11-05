@@ -41,18 +41,15 @@ export default function Footer() {
           <SocialLinks social={settings?.social} className="mt-5" />
         </div>
         <div>
-          <h3 className="mb-4 text-sm font-bold uppercase tracking-wider !text-white">Website Pages (1-9)</h3>
+          <h3 className="mb-4 text-sm font-bold uppercase tracking-wider !text-white">Quick Links</h3>
           <ul className="space-y-2 text-sm">
             {[
-              ['/', '1. Home Page'],
-              ['/about', '2. About Us'],
-              ['/services', '3. Our Services'],
-              ['/water-tank-cleaning', '4. Water Tank Cleaning'],
-              ['/ro-water-purifier-cleaning', '5. RO Purifier Maintenance'],
-              ['/bathroom-kitchen-cleaning', '6. Bathroom & Kitchen Clean'],
-              ['/glass-window-cleaning', '7. Glass & Window Cleaning'],
-              ['/gallery', '8. Gallery / Our Work'],
-              ['/contact', '9. Contact & Book a Service'],
+              ['/', 'Home'],
+              ['/about', 'About Us'],
+              ['/services', 'Our Services'],
+              ['/gallery', 'Work Gallery'],
+              ['/locations', 'Service Locations'],
+              ['/contact', 'Contact & Booking'],
             ].map(([to, l]) => (
               <li key={to}><Link to={to} className="hover:text-aqua-400">{l}</Link></li>
             ))}

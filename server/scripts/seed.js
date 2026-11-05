@@ -330,53 +330,7 @@ const RO_SERVICES = [
   },
 ];
 
-const RO_TESTIMONIALS = [
-  {
-    name: 'Vikramaditya Sharma',
-    location: 'Jankipuram, Lucknow',
-    service: 'RO Water Purifier Deep Cleaning & Tank Sanitization',
-    rating: 5,
-    message: 'Our RO purifier water had started smelling slightly stale. The Aqua Ak Enterprises technician completely opened the unit, descaled the internal tank in front of me, and tested the TDS. The water tastes 100% fresh and clean now. Prompt and very professional!',
-    isPublished: true,
-    order: 0,
-  },
-  {
-    name: 'Dr. Meenakshi Sundaram',
-    location: 'Vasant Kunj, South Delhi',
-    service: 'Mechanized Overhead Water Tank Cleaning',
-    rating: 5,
-    message: 'We got both our overhead 1,000L Sintex tanks cleaned with their 6-stage mechanized process. The German slurry vacuum extracted an incredible amount of bottom mud. No bleach smell at all, and our RO filters are running much smoother now.',
-    isPublished: true,
-    order: 1,
-  },
-  {
-    name: 'Rajesh Gupta',
-    location: 'DLF Phase 4, Gurgaon',
-    service: 'RO Filter & Membrane Replacement Service',
-    rating: 5,
-    message: 'Other technicians always push to replace every single part. These guys tested the TDS and membrane pressure first, showed me the readings, and only replaced the sediment filter and carbon block. Saved me thousands. Truly honest service.',
-    isPublished: true,
-    order: 2,
-  },
-  {
-    name: 'Ananya Deshmukh',
-    location: 'Indirapuram, Ghaziabad',
-    service: 'Annual Maintenance Contract (AMC)',
-    rating: 5,
-    message: 'We took their Comprehensive RO AMC plan last year. They call proactively every 4 months to clean the tank and change filters. Whenever we had a minor pipe drip, they fixed it within 3 hours. Best decision for our home water hygiene.',
-    isPublished: true,
-    order: 3,
-  },
-  {
-    name: 'Sameer Malhotra',
-    location: 'Cyber City, Gurgaon',
-    service: 'Commercial & Industrial RO Plant Servicing',
-    rating: 5,
-    message: 'They handle our office 100 LPH commercial RO plant. The chemical-in-place membrane flush restored our flow rate, and the TDS is strictly maintained at 110 ppm for 80+ employees. Excellent corporate execution.',
-    isPublished: true,
-    order: 4,
-  },
-];
+const RO_TESTIMONIALS = [];
 
 const RO_GALLERY = [
   // 1. Water Tanks (Before & After + Showcases)
@@ -670,10 +624,8 @@ export async function seed(disconnectAfter = false) {
   await FAQ.insertMany(RO_FAQS);
   console.log('Seeded RO FAQs.');
 
-  // Update or replace Testimonials
+  // Remove all fake testimonials
   await Testimonial.deleteMany({});
-  await Testimonial.insertMany(RO_TESTIMONIALS);
-  console.log('Seeded authentic RO water hygiene testimonials.');
 
   // Update or replace Gallery
   await Gallery.deleteMany({});

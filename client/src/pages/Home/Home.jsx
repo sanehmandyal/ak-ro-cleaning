@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Phone, MessageCircle, CalendarCheck, ArrowRight, Star, MapPin, Clock, Mail, Quote } from 'lucide-react';
+import { Phone, MessageCircle, CalendarCheck, ArrowRight, Star, MapPin, Clock, Mail } from 'lucide-react';
 import Seo, { localBusinessJsonLd } from '../../components/Seo';
 import { useSite } from '../../context/SiteContext';
 import useFetch from '../../hooks/useFetch';
@@ -70,7 +70,6 @@ export default function Home() {
   const { settings } = useSite();
   const services = useFetch('/services', { popular: 'true' });
   const gallery = useFetch('/gallery', { type: 'before-after', limit: 3 });
-  const testimonials = useFetch('/testimonials');
   const faqs = useFetch('/faqs');
   const c = settings?.contact || {};
   const name = settings?.businessName || 'Aqua Ak Enterprises';
@@ -157,30 +156,6 @@ export default function Home() {
         </section>
       )}
 
-      {testimonials.data?.length > 0 && (
-        <section className="section">
-          <div className="container-x">
-            <SectionHeading eyebrow="Testimonials" title="What Our Customers Say" />
-            <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-              {testimonials.data.slice(0, 6).map((t) => (
-                <figure key={t._id} className="card flex flex-col p-6">
-                  <Quote className="h-7 w-7 text-aqua-500" />
-                  <div className="mt-3 flex gap-0.5" aria-label={`${t.rating} out of 5 stars`}>
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star key={i} className={`h-4 w-4 ${i < t.rating ? 'fill-amber-400 text-amber-400' : 'text-slate-300'}`} />
-                    ))}
-                  </div>
-                  <blockquote className="mt-3 flex-1 break-words text-sm leading-relaxed text-slate-600">{t.message}</blockquote>
-                  <figcaption className="mt-4 border-t border-slate-100 pt-4">
-                    <p className="font-display font-bold text-navy-800">{t.name}</p>
-                    <p className="text-xs text-slate-500">{[t.service, t.location].filter(Boolean).join(' · ')}</p>
-                  </figcaption>
-                </figure>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
 
       {settings?.serviceAreas?.length > 0 && (
         <section className="section bg-slate-50">

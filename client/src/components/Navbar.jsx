@@ -146,7 +146,7 @@ export default function Navbar() {
                     to="/services"
                     className="flex items-center justify-between rounded-xl px-3 py-2 text-xs font-bold text-brand-600 hover:bg-brand-50 transition"
                   >
-                    <span>Page 3: View All Services</span>
+                    <span>View All Services</span>
                     <Sparkles className="h-3.5 w-3.5 text-aqua-500" />
                   </Link>
                 </div>
@@ -281,7 +281,7 @@ export default function Navbar() {
             </div>
 
             <div className="px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
-              All 9 Website Pages
+              Quick Menu
             </div>
 
             {ALL_WEBSITE_PAGES.map((page) => (
@@ -295,12 +295,7 @@ export default function Navbar() {
                   }`
                 }
               >
-                <div className="flex items-center gap-2.5">
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-100 text-xs font-bold text-slate-600">
-                    {page.num}
-                  </span>
-                  <span>{page.label}</span>
-                </div>
+                <span>{page.label}</span>
                 {page.icon && <page.icon className="h-4 w-4 text-aqua-600" />}
               </NavLink>
             ))}

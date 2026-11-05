@@ -9,6 +9,7 @@ import { notFound, errorHandler } from './middleware/error.js';
 import { seed } from './scripts/seed.js';
 import Service from './models/Service.js';
 import Admin from './models/Admin.js';
+import Testimonial from './models/Testimonial.js';
 
 const app = express();
 app.set('trust proxy', 1);
@@ -73,6 +74,12 @@ async function start() {
   } catch (err) {
     console.warn('Admin sync notice:', err.message);
   }
+  try {
+    await Testimonial.deleteMany({});
+  } catch (_err) {
+    /* ignore */
+  }
+
   try {
     const serviceCount = await Service.countDocuments();
     const hasImages = await Service.findOne({ 'image.url': { $exists: true, $ne: '' } });
