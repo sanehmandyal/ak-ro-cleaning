@@ -36,11 +36,11 @@ export default function About() {
         <div className="container-x grid items-center gap-12 lg:grid-cols-2">
           <Img
             src={
-              a.image?.url && !a.image.url.includes('1582213782179')
+              a.image?.url && !a.image.url.includes('1582213782179') && !a.image.url.includes('1581578731548')
                 ? a.image.url
-                : 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1200&q=80'
+                : '/images/ro-purifier-machine.jpg'
             }
-            alt={`${name} certified water hygiene specialist inspecting water purification equipment`}
+            alt={`${name} modern RO water purifier machine with digital TDS display`}
             className="aspect-[4/3] w-full rounded-3xl object-cover shadow-card"
             sizes="(min-width:1024px) 50vw, 100vw"
             eager

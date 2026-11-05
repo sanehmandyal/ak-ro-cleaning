@@ -18,7 +18,7 @@ const RO_SERVICES = [
     popular: true,
     price: { amount: 0, unit: '', label: '' },
     image: {
-      url: 'https://images.unsplash.com/photo-1584467735871-8e85353a8413?auto=format&fit=crop&w=1200&q=80',
+      url: '/images/ro-purifier-machine.jpg',
       publicId: 'ro_sanitization',
     },
     short: 'Complete disassembly, food-grade storage tank descaling, internal biofilm sterilization, and calibrated digital TDS test.',
@@ -374,7 +374,7 @@ const RO_GALLERY = [
       publicId: 'ro_tank_before_1',
     },
     afterImage: {
-      url: 'https://images.unsplash.com/photo-1584467735871-8e85353a8413?auto=format&fit=crop&w=1000&q=80',
+      url: '/images/ro-purifier-machine.jpg',
       publicId: 'ro_tank_after_1',
     },
     isPublished: true,
@@ -677,7 +677,7 @@ export async function seed(disconnectAfter = false) {
       experience:
         'Over 15,000+ domestic RO purifiers serviced and 10,000+ residential water tanks sterilized with zero chemical toxicity and 100% digital TDS verification.',
       image: {
-        url: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1200&q=80',
+        url: '/images/ro-purifier-machine.jpg',
         publicId: 'about_ro',
       },
       standards: [

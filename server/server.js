@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import path from 'path';
 import { connectDB } from './config/db.js';
 import { configureCloudinary, isCloudinaryConfigured } from './config/cloudinary.js';
 import routes from './routes/index.js';
@@ -33,6 +34,7 @@ app.use(
 );
 app.use(express.json({ limit: '25mb' }));
 app.use(express.urlencoded({ limit: '25mb', extended: true }));
+app.use('/images', express.static(path.resolve('public/images')));
 
 app.get('/health', (_req, res) => res.json({ success: true, status: 'ok', time: new Date().toISOString() }));
 app.use('/api', routes);
@@ -85,16 +87,16 @@ async function start() {
 
   try {
     await WebsiteSettings.updateOne(
-      { key: 'main', 'about.image.url': /1582213782179/ },
-      { $set: { 'about.image.url': 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1200&q=80' } }
+      { key: 'main', $or: [{ 'about.image.url': /1582213782179/ }, { 'about.image.url': /1581578731548/ }, { 'about.image.url': { $exists: false } }] },
+      { $set: { 'about.image.url': '/images/ro-purifier-machine.jpg' } }
     );
     await Service.updateMany(
-      { 'image.url': /1582213782179/ },
-      { $set: { 'image.url': 'https://images.unsplash.com/photo-1584467735871-8e85353a8413?auto=format&fit=crop&w=1200&q=80' } }
+      { $or: [{ 'image.url': /1582213782179/ }, { 'image.url': /1584467735871/ }] },
+      { $set: { 'image.url': '/images/ro-purifier-machine.jpg' } }
     );
     await Gallery.updateMany(
-      { 'afterImage.url': /1582213782179/ },
-      { $set: { 'afterImage.url': 'https://images.unsplash.com/photo-1584467735871-8e85353a8413?auto=format&fit=crop&w=1000&q=80' } }
+      { $or: [{ 'afterImage.url': /1582213782179/ }, { 'afterImage.url': /1584467735871/ }] },
+      { $set: { 'afterImage.url': '/images/ro-purifier-machine.jpg' } }
     );
   } catch (_err) {
     /* ignore */

@@ -106,7 +106,7 @@ export default function ROPurifierCleaningPage() {
       name: 'RO Water Purifier Cleaning and Maintenance',
       description:
         'Professional RO purifier servicing, internal tank sterilization, filter flushing, and digital TDS calibration for all major brands.',
-      image: 'https://images.unsplash.com/photo-1584467735871-8e85353a8413?auto=format&fit=crop&w=1200&q=80',
+      image: '/images/ro-purifier-machine.jpg',
       provider: {
         '@type': 'LocalBusiness',
         name,
@@ -132,7 +132,7 @@ export default function ROPurifierCleaningPage() {
         title="RO Water Purifier Cleaning & Servicing | Tank Sanitization & TDS Check"
         description="Comprehensive RO purifier maintenance & tank sterilization. Digital TDS testing, filter housing flush, and pressure calibration for Kent, Aquaguard, Pureit, and all top brands."
         keywords="RO service, water purifier maintenance, RO tank cleaning, TDS test, purifier sanitization, RO repair"
-        image="https://images.unsplash.com/photo-1584467735871-8e85353a8413?auto=format&fit=crop&w=1200&q=80"
+        image="/images/ro-purifier-machine.jpg"
         jsonLd={jsonLd}
       />
 
