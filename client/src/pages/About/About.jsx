@@ -35,8 +35,12 @@ export default function About() {
       <section className="section">
         <div className="container-x grid items-center gap-12 lg:grid-cols-2">
           <Img
-            src={a.image?.url || 'https://images.unsplash.com/photo-1628177142898-93e36e4e3a50?auto=format&fit=crop&w=1200&q=80'}
-            alt={`${name} professional cleaning crew in sterile uniforms`}
+            src={
+              a.image?.url && !a.image.url.includes('1582213782179')
+                ? a.image.url
+                : 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1200&q=80'
+            }
+            alt={`${name} certified water hygiene specialist inspecting water purification equipment`}
             className="aspect-[4/3] w-full rounded-3xl object-cover shadow-card"
             sizes="(min-width:1024px) 50vw, 100vw"
             eager

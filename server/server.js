@@ -10,6 +10,8 @@ import { seed } from './scripts/seed.js';
 import Service from './models/Service.js';
 import Admin from './models/Admin.js';
 import Testimonial from './models/Testimonial.js';
+import WebsiteSettings from './models/WebsiteSettings.js';
+import Gallery from './models/Gallery.js';
 
 const app = express();
 app.set('trust proxy', 1);
@@ -77,6 +79,23 @@ async function start() {
   }
   try {
     await Testimonial.deleteMany({});
+  } catch (_err) {
+    /* ignore */
+  }
+
+  try {
+    await WebsiteSettings.updateOne(
+      { key: 'main', 'about.image.url': /1582213782179/ },
+      { $set: { 'about.image.url': 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1200&q=80' } }
+    );
+    await Service.updateMany(
+      { 'image.url': /1582213782179/ },
+      { $set: { 'image.url': 'https://images.unsplash.com/photo-1584467735871-8e85353a8413?auto=format&fit=crop&w=1200&q=80' } }
+    );
+    await Gallery.updateMany(
+      { 'afterImage.url': /1582213782179/ },
+      { $set: { 'afterImage.url': 'https://images.unsplash.com/photo-1584467735871-8e85353a8413?auto=format&fit=crop&w=1000&q=80' } }
+    );
   } catch (_err) {
     /* ignore */
   }
