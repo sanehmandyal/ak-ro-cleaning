@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Plus, Pencil, Trash2, Search, ArrowLeft, Save } from 'lucide-react';
+import { Plus, Pencil, Trash2, Search, ArrowLeft, Save, Settings2, ChevronDown, ChevronUp } from 'lucide-react';
 import { get, post, put, del, errorMessage } from '../../services/api';
 import { useToast } from '../../context/ToastContext';
 import { useConfirm } from '../../context/ConfirmContext';
@@ -95,6 +95,7 @@ export function ServiceForm() {
   const [form, setForm] = useState(EMPTY);
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
+  const [showAdvanced, setShowAdvanced] = useState(false);
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
@@ -120,8 +121,15 @@ export function ServiceForm() {
     setErrors(errs);
     if (Object.keys(errs).length) return toast.error(Object.values(errs)[0]);
     setSaving(true);
+
+    const generatedSlug = form.slug?.trim() || form.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    const generatedShortDesc = form.shortDescription?.trim() || (form.description ? form.description.slice(0, 160) : '');
+
     const payload = {
       ...form,
+      slug: generatedSlug,
+      shortDescription: generatedShortDesc,
+      description: form.description || form.shortDescription || form.title,
       price: { ...form.price, amount: form.price.amount === '' ? 0 : Number(form.price.amount) },
       order: Number(form.order) || 0,
       benefits: form.benefits.filter((x) => x.trim()),
@@ -140,59 +148,153 @@ export function ServiceForm() {
 
   return (
     <form onSubmit={submit} noValidate>
-      <PageHeader title={isNew ? 'Add service' : 'Edit service'}>
+      <PageHeader title={isNew ? 'Add Service' : 'Edit Service'}>
         <Link to="/admin/services" className="btn-outline btn-sm"><ArrowLeft className="h-4 w-4" /> Back</Link>
-        <button type="submit" className="btn-primary btn-sm" disabled={saving}>{saving ? <Spinner className="h-4 w-4" /> : <Save className="h-4 w-4" />} Save</button>
+        <button type="submit" className="btn-primary btn-sm" disabled={saving}>
+          {saving ? <Spinner className="h-4 w-4" /> : <Save className="h-4 w-4" />} Save Service
+        </button>
       </PageHeader>
+
       <div className="grid gap-6 xl:grid-cols-[1fr_360px]">
+        {/* Main Simple Column */}
         <div className="min-w-0 space-y-6">
-          <Card title="Basic information">
+          <Card title="Quick Service Details">
             <div className="space-y-4">
-              <Field label="Title" required error={errors.title} htmlFor="s-title"><input id="s-title" className={`input ${errors.title ? 'input-error' : ''}`} value={form.title} onChange={(e) => set('title', e.target.value)} /></Field>
-              <Field label="URL slug" hint="Leave empty to generate from the title" htmlFor="s-slug"><input id="s-slug" className="input" value={form.slug} onChange={(e) => set('slug', e.target.value)} placeholder="water-tank-cleaning" /></Field>
-              <Field label="Short description" hint="Shown on service cards (max 300 chars)" htmlFor="s-short"><textarea id="s-short" rows={2} maxLength={300} className="input" value={form.shortDescription} onChange={(e) => set('shortDescription', e.target.value)} /></Field>
-              <Field label="Full description" htmlFor="s-desc"><textarea id="s-desc" rows={6} className="input" value={form.description} onChange={(e) => set('description', e.target.value)} /></Field>
+              <Field label="Service Name / Title" required error={errors.title} htmlFor="s-title">
+                <input
+                  id="s-title"
+                  className={`input font-medium ${errors.title ? 'input-error' : ''}`}
+                  value={form.title}
+                  placeholder="e.g. RO Purifier Deep Cleaning & Descaling"
+                  onChange={(e) => set('title', e.target.value)}
+                />
+              </Field>
+
+              <Field label="Description" hint="Simple description of what you clean or service" htmlFor="s-desc">
+                <textarea
+                  id="s-desc"
+                  rows={4}
+                  className="input leading-relaxed"
+                  value={form.description}
+                  placeholder="Detailed explanation of the service and what benefits customers will receive..."
+                  onChange={(e) => set('description', e.target.value)}
+                />
+              </Field>
+
+              <StringListEditor
+                label="Key Highlights / Features"
+                items={form.benefits}
+                onChange={(v) => set('benefits', v)}
+                placeholder="e.g. Removes algae, sludge & bacterial biofilm"
+              />
             </div>
           </Card>
-          <Card title="Benefits & Why choose us">
-            <div className="space-y-5">
-              <StringListEditor label="Benefits" items={form.benefits} onChange={(v) => set('benefits', v)} placeholder="e.g. Removes sludge and algae" />
-              <StringListEditor label="Why choose us (for this service)" items={form.whyChooseUs} onChange={(v) => set('whyChooseUs', v)} />
-            </div>
-          </Card>
-          <Card title="Cleaning process">
-            <ObjectListEditor label="Steps" items={form.process} onChange={(v) => set('process', v)} fields={[{ key: 'title', label: 'Step title' }, { key: 'description', label: 'Description', textarea: true }]} />
-          </Card>
-          <Card title="FAQs">
-            <ObjectListEditor label="Questions" items={form.faqs} onChange={(v) => set('faqs', v)} fields={[{ key: 'question', label: 'Question' }, { key: 'answer', label: 'Answer', textarea: true }]} />
-          </Card>
-          <Card title="SEO">
-            <div className="space-y-4">
-              <Field label="SEO title" hint={`${form.seo.title.length}/60 recommended`} htmlFor="s-seot"><input id="s-seot" className="input" value={form.seo.title} onChange={(e) => setNested('seo', 'title', e.target.value)} /></Field>
-              <Field label="Meta description" hint={`${form.seo.description.length}/160 recommended`} htmlFor="s-seod"><textarea id="s-seod" rows={2} className="input" value={form.seo.description} onChange={(e) => setNested('seo', 'description', e.target.value)} /></Field>
-              <Field label="Keywords" hint="Comma separated, optional" htmlFor="s-seok"><input id="s-seok" className="input" value={form.seo.keywords} onChange={(e) => setNested('seo', 'keywords', e.target.value)} /></Field>
-            </div>
-          </Card>
+
+          {/* Toggle Advanced Section Button */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs">
+            <button
+              type="button"
+              onClick={() => setShowAdvanced(!showAdvanced)}
+              className="flex w-full items-center justify-between text-left text-sm font-bold text-navy-900 hover:text-aqua-600 transition"
+            >
+              <div className="flex items-center gap-2">
+                <Settings2 className="h-4 w-4 text-aqua-600" />
+                <span>Advanced Settings (Optional: Steps, FAQs, Slug, SEO)</span>
+              </div>
+              {showAdvanced ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+            </button>
+
+            {showAdvanced && (
+              <div className="mt-5 space-y-6 border-t border-slate-100 pt-5">
+                <Field label="Custom URL Slug" hint="Auto-generated if left empty" htmlFor="s-slug">
+                  <input
+                    id="s-slug"
+                    className="input"
+                    value={form.slug}
+                    onChange={(e) => set('slug', e.target.value)}
+                    placeholder="water-tank-cleaning"
+                  />
+                </Field>
+
+                <Field label="Short Card Summary" hint="Shown on homepage cards (optional)" htmlFor="s-short">
+                  <textarea
+                    id="s-short"
+                    rows={2}
+                    maxLength={300}
+                    className="input"
+                    value={form.shortDescription}
+                    onChange={(e) => set('shortDescription', e.target.value)}
+                  />
+                </Field>
+
+                <StringListEditor
+                  label="Why Choose Us Points"
+                  items={form.whyChooseUs}
+                  onChange={(v) => set('whyChooseUs', v)}
+                  placeholder="e.g. Trained technicians in uniform"
+                />
+
+                <div>
+                  <h4 className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-500">Service Process Steps</h4>
+                  <ObjectListEditor
+                    label="Steps"
+                    items={form.process}
+                    onChange={(v) => set('process', v)}
+                    fields={[{ key: 'title', label: 'Step title' }, { key: 'description', label: 'Description', textarea: true }]}
+                  />
+                </div>
+
+                <div>
+                  <h4 className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-500">Service FAQs</h4>
+                  <ObjectListEditor
+                    label="Questions"
+                    items={form.faqs}
+                    onChange={(v) => set('faqs', v)}
+                    fields={[{ key: 'question', label: 'Question' }, { key: 'answer', label: 'Answer', textarea: true }]}
+                  />
+                </div>
+
+                <div>
+                  <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">Search Engine Optimization (SEO)</h4>
+                  <div className="space-y-3">
+                    <Field label="SEO Title" hint="Optional, auto-generated from service name" htmlFor="s-seot">
+                      <input id="s-seot" className="input" value={form.seo.title} onChange={(e) => setNested('seo', 'title', e.target.value)} />
+                    </Field>
+                    <Field label="Meta Description" hint="Optional" htmlFor="s-seod">
+                      <textarea id="s-seod" rows={2} className="input" value={form.seo.description} onChange={(e) => setNested('seo', 'description', e.target.value)} />
+                    </Field>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
+
+        {/* Sidebar: Image & Visibility */}
         <div className="min-w-0 space-y-6">
-          <Card title="Visibility">
-            <Toggle checked={form.isAvailable} onChange={(v) => set('isAvailable', v)} label="Available (shown on website)" />
-            <Toggle checked={form.isPopular} onChange={(v) => set('isPopular', v)} label="Show in popular services" />
-            <Field label="Display order" hint="Lower numbers appear first" htmlFor="s-order"><input id="s-order" type="number" className="input" value={form.order} onChange={(e) => set('order', e.target.value)} /></Field>
+          <Card title="Service Image">
+            <ImageUploader value={form.image} onChange={(v) => set('image', v)} folder="services" label="Featured Image" />
           </Card>
-          <Card title="Image"><ImageUploader value={form.image} onChange={(v) => set('image', v)} folder="services" label="Service image" /></Card>
-          <Card title="Pricing & call to action">
-            <div className="space-y-4">
-              <Field label="Starting price (optional)" error={errors.price} htmlFor="s-price"><input id="s-price" type="number" min="0" className="input" value={form.price.amount} onChange={(e) => setNested('price', 'amount', e.target.value)} placeholder="0 = no price shown" /></Field>
-              <Field label="Price unit" htmlFor="s-unit"><input id="s-unit" className="input" value={form.price.unit} onChange={(e) => setNested('price', 'unit', e.target.value)} placeholder="per tank" /></Field>
-              <Field label="Price label (when no price)" htmlFor="s-label"><input id="s-label" className="input" value={form.price.label} onChange={(e) => setNested('price', 'label', e.target.value)} placeholder="Contact us for a quote" /></Field>
-              <Field label="CTA button text" htmlFor="s-cta"><input id="s-cta" className="input" value={form.ctaText} onChange={(e) => set('ctaText', e.target.value)} /></Field>
+
+          <Card title="Display & Visibility">
+            <div className="space-y-3">
+              <Toggle checked={form.isAvailable} onChange={(v) => set('isAvailable', v)} label="Show on public website" />
+              <Toggle checked={form.isPopular} onChange={(v) => set('isPopular', v)} label="Show in Popular Services on Home" />
+              <Field label="Display Order" hint="Lower numbers appear first" htmlFor="s-order">
+                <input id="s-order" type="number" className="input" value={form.order} onChange={(e) => set('order', e.target.value)} />
+              </Field>
             </div>
           </Card>
-          <Card title="Icon">
-            <select className="input" value={form.icon} onChange={(e) => set('icon', e.target.value)} aria-label="Icon">
-              {Object.keys(ICONS).map((n) => <option key={n}>{n}</option>)}
-            </select>
+
+          <Card title="Pricing (Optional)">
+            <div className="space-y-3">
+              <Field label="Price (optional)" error={errors.price} htmlFor="s-price">
+                <input id="s-price" type="number" min="0" className="input" value={form.price.amount} onChange={(e) => setNested('price', 'amount', e.target.value)} placeholder="0 = Call for quote" />
+              </Field>
+              <Field label="Price unit (e.g. per tank, per visit)" htmlFor="s-unit">
+                <input id="s-unit" className="input" value={form.price.unit} onChange={(e) => setNested('price', 'unit', e.target.value)} placeholder="per unit" />
+              </Field>
+            </div>
           </Card>
         </div>
       </div>

@@ -17,22 +17,26 @@ export const upload = multer({
   },
 });
 
-export function uploadBuffer(buffer, folder = 'ro-cleaning') {
-  if (!isCloudinaryConfigured()) {
-    throw new ApiError(
-      503,
-      'Image storage is not configured. Set the CLOUDINARY_* environment variables on the server.'
-    );
+export function uploadBuffer(buffer, folder = 'ro-cleaning', mimetype = 'image/jpeg') {
+  if (isCloudinaryConfigured()) {
+    return new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        { folder, resource_type: 'image', quality: 'auto', fetch_format: 'auto' },
+        (err, result) => {
+          if (err) return reject(new ApiError(502, `Image upload failed: ${err.message}`));
+          resolve({ url: result.secure_url, publicId: result.public_id });
+        }
+      );
+      Readable.from(buffer).pipe(stream);
+    });
   }
-  return new Promise((resolve, reject) => {
-    const stream = cloudinary.uploader.upload_stream(
-      { folder, resource_type: 'image', quality: 'auto', fetch_format: 'auto' },
-      (err, result) => {
-        if (err) return reject(new ApiError(502, `Image upload failed: ${err.message}`));
-        resolve({ url: result.secure_url, publicId: result.public_id });
-      }
-    );
-    Readable.from(buffer).pipe(stream);
+
+  // Fallback: when Cloudinary is not configured, save as data URI so admins can upload images immediately
+  const mime = mimetype || 'image/jpeg';
+  const base64 = buffer.toString('base64');
+  return Promise.resolve({
+    url: `data:${mime};base64,${base64}`,
+    publicId: `inline_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
   });
 }
 

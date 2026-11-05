@@ -54,7 +54,7 @@ router.get('/admin/stats', admin, stats);
 router.post('/admin/upload', admin, upload.array('images', 20), asyncHandler(async (req, res) => {
   if (!req.files?.length) throw new ApiError(400, 'No image received');
   const folder = ['services', 'gallery', 'site', 'seo'].includes(req.body.folder) ? req.body.folder : 'misc';
-  const results = await Promise.all(req.files.map((f) => uploadBuffer(f.buffer, `ro-cleaning/${folder}`)));
+  const results = await Promise.all(req.files.map((f) => uploadBuffer(f.buffer, `ro-cleaning/${folder}`, f.mimetype)));
   ok(res, results, {}, 201);
 }));
 
