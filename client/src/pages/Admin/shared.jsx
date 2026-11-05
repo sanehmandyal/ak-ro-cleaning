@@ -56,6 +56,40 @@ export function Toggle({ checked, onChange, label }) {
 }
 
 // Single-image uploader: uploads to Cloudinary through the API and returns { url, publicId }.
+function compressImageFile(file, maxWidth = 1200, quality = 0.82) {
+  return new Promise((resolve) => {
+    if (file.type === 'image/svg+xml' || file.type === 'image/gif') {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => resolve('');
+      reader.readAsDataURL(file);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        let width = img.width;
+        let height = img.height;
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = () => resolve(e.target.result);
+      img.src = e.target.result;
+    };
+    reader.onerror = () => resolve('');
+    reader.readAsDataURL(file);
+  });
+}
+
 export function ImageUploader({ value, onChange, folder = 'misc', label = 'Image', aspect = 'aspect-video' }) {
   const toast = useToast();
   const input = useRef(null);
@@ -70,7 +104,6 @@ export function ImageUploader({ value, onChange, folder = 'misc', label = 'Image
     const file = e.target.files?.[0];
     e.target.value = '';
     if (!file) return;
-    if (file.size > 8 * 1024 * 1024) return toast.error('Image is too large (max 8 MB)');
     setPreview(URL.createObjectURL(file));
     setBusy(true);
     try {
@@ -78,13 +111,14 @@ export function ImageUploader({ value, onChange, folder = 'misc', label = 'Image
       onChange(img);
       toast.success('Image updated successfully');
     } catch (_err) {
-      // Direct client-side data URL fallback so image upload NEVER fails
-      const reader = new FileReader();
-      reader.onload = () => {
-        onChange({ url: reader.result, publicId: `local_${Date.now()}` });
-        toast.success('Image saved successfully');
-      };
-      reader.readAsDataURL(file);
+      // High-performance client-side compression fallback:
+      const compressed = await compressImageFile(file);
+      if (compressed) {
+        onChange({ url: compressed, publicId: `local_${Date.now()}` });
+        toast.success('Image loaded successfully');
+      } else {
+        toast.error('Failed to load image');
+      }
     } finally {
       setBusy(false);
       setPreview('');

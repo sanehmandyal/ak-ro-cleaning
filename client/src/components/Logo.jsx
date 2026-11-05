@@ -28,13 +28,13 @@ export default function Logo({ light = false, to = '/' }) {
   const name = settings?.businessName || 'Aqua Ak Enterprises';
   const logo = settings?.logo?.url;
   return (
-    <Link to={to} className="flex min-w-0 items-center gap-2.5" aria-label={`${name} home`}>
+    <Link to={to} className="flex shrink-0 items-center gap-2.5" aria-label={`${name} home`}>
       {logo ? (
         <img src={optimizeImage(logo, 160)} alt={`${name} logo`} className="h-9 w-auto max-w-[140px] object-contain" />
       ) : (
         <LogoMark />
       )}
-      <span className={`truncate font-display text-base font-extrabold leading-tight sm:text-lg ${light ? 'text-white' : 'text-navy-800'}`}>
+      <span className={`font-display text-base font-extrabold tracking-tight whitespace-nowrap sm:text-lg ${light ? 'text-white' : 'text-navy-950'}`}>
         {name}
       </span>
     </Link>

@@ -15,30 +15,19 @@ import {
   MapPin,
   Building2,
   Shield,
+  ArrowRight,
 } from 'lucide-react';
 import Logo from './Logo';
 import { useSite } from '../context/SiteContext';
 import { telHref } from '../utils/format';
 
-const ALL_WEBSITE_PAGES = [
-  { to: '/', label: 'Home', num: 1 },
-  { to: '/about', label: 'About Us', num: 2 },
-  { to: '/services', label: 'Our Services', num: 3 },
-  { to: '/water-tank-cleaning', label: 'Water Tank Cleaning', num: 4, icon: Droplets },
-  { to: '/ro-water-purifier-cleaning', label: 'RO Purifier Maintenance', num: 5, icon: Waves },
-  { to: '/bathroom-kitchen-cleaning', label: 'Bathroom & Kitchen Deep Clean', num: 6, icon: Bath },
-  { to: '/glass-window-cleaning', label: 'Glass & Window Cleaning', num: 7, icon: AppWindow },
-  { to: '/gallery', label: 'Gallery / Our Work', num: 8 },
-  { to: '/contact', label: 'Contact & Book', num: 9 },
-];
-
 const SERVICE_PAGES = [
-  { to: '/water-tank-cleaning', label: 'Water Tank Cleaning', icon: Droplets, desc: '6-stage mechanized cleaning & UV' },
-  { to: '/ro-water-purifier-cleaning', label: 'RO Purifier Maintenance', icon: Waves, desc: 'Internal tank descaling & TDS check' },
-  { to: '/bathroom-kitchen-cleaning', label: 'Bathroom & Kitchen Deep Clean', icon: Bath, desc: 'Limescale descaling & chimney degrease' },
-  { to: '/glass-window-cleaning', label: 'Glass & Window Cleaning', icon: AppWindow, desc: 'Streak-free balcony squeegee' },
-  { to: '/services/ro-filter-membrane-replacement', label: 'Filter & Membrane Replacement', icon: Layers, desc: 'Genuine 75/100 GPD membranes' },
-  { to: '/services/commercial-ro-plant-servicing', label: 'Commercial RO Plant Service', icon: Building2, desc: '50 to 1,000+ LPH systems' },
+  { to: '/water-tank-cleaning', label: 'Water Tank Cleaning', icon: Droplets, desc: '6-stage mechanized cleaning & UV disinfection' },
+  { to: '/ro-water-purifier-cleaning', label: 'RO Purifier Maintenance', icon: Waves, desc: 'Internal tank descaling & digital TDS check' },
+  { to: '/bathroom-kitchen-cleaning', label: 'Bathroom & Kitchen Deep Clean', icon: Bath, desc: 'Hard water limescale descaling & degrease' },
+  { to: '/glass-window-cleaning', label: 'Glass & Window Cleaning', icon: AppWindow, desc: 'Streak-free balcony & facade glass wash' },
+  { to: '/services/ro-filter-membrane-replacement', label: 'Filter & Membrane Replacement', icon: Layers, desc: 'Genuine 75/100 GPD high-TDS membranes' },
+  { to: '/services/commercial-ro-plant-servicing', label: 'Commercial RO Plant Service', icon: Building2, desc: '50 to 1,000+ LPH systems for offices' },
 ];
 
 export default function Navbar() {
@@ -47,7 +36,7 @@ export default function Navbar() {
   const dropdownRef = useRef(null);
   const { pathname } = useLocation();
   const { settings } = useSite();
-  const phone = settings?.contact?.phone;
+  const phone = settings?.contact?.phone || '9219254461';
 
   useEffect(() => {
     setOpen(false);
@@ -75,19 +64,24 @@ export default function Navbar() {
   }, []);
 
   const linkClass = ({ isActive }) =>
-    `rounded-xl px-2.5 py-1.5 text-xs font-bold transition xl:text-sm ${
+    `rounded-xl px-3 py-2 text-sm font-semibold transition ${
       isActive
-        ? 'text-aqua-600 bg-aqua-50 shadow-sm border border-aqua-200/60'
+        ? 'text-aqua-600 bg-aqua-50 shadow-xs border border-aqua-200/60 font-bold'
         : 'text-navy-900 hover:text-aqua-600 hover:bg-slate-50'
     }`;
 
+  const isServicesActive = pathname.startsWith('/services') || pathname.includes('-cleaning');
+
   return (
     <header className="sticky top-0 z-50 border-b border-aqua-100/70 bg-white/95 backdrop-blur-md shadow-xs">
-      <div className="container-x flex h-16 items-center justify-between gap-3">
-        <Logo />
+      <div className="container-x flex h-16 items-center justify-between gap-4">
+        {/* Full Logo - Never cut off */}
+        <div className="shrink-0">
+          <Logo />
+        </div>
 
-        {/* Desktop Navigation showing all 9 pages */}
-        <nav className="hidden items-center gap-1 xl:flex" aria-label="Main">
+        {/* Clean Desktop Navigation Links */}
+        <nav className="hidden items-center gap-1.5 lg:flex" aria-label="Main Navigation">
           <NavLink to="/" end className={linkClass}>
             Home
           </NavLink>
@@ -98,19 +92,20 @@ export default function Navbar() {
           {/* Services Dropdown */}
           <div className="relative" ref={dropdownRef}>
             <button
+              type="button"
               onClick={() => setServicesDropdown((s) => !s)}
               onMouseEnter={() => setServicesDropdown(true)}
-              className={`inline-flex items-center gap-1 rounded-xl px-2.5 py-1.5 text-xs font-bold transition xl:text-sm ${
-                pathname.includes('/services') || pathname.includes('-cleaning')
-                  ? 'text-aqua-600 bg-aqua-50 border border-aqua-200/60'
+              className={`inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-semibold transition ${
+                isServicesActive
+                  ? 'text-aqua-600 bg-aqua-50 border border-aqua-200/60 font-bold'
                   : 'text-navy-900 hover:text-aqua-600 hover:bg-slate-50'
               }`}
               aria-expanded={servicesDropdown}
             >
-              Services{' '}
+              <span>Services</span>
               <ChevronDown
-                className={`h-3.5 w-3.5 transition-transform duration-200 ${
-                  servicesDropdown ? 'rotate-180' : ''
+                className={`h-4 w-4 text-slate-500 transition-transform duration-200 ${
+                  servicesDropdown ? 'rotate-180 text-aqua-600' : ''
                 }`}
               />
             </button>
@@ -118,10 +113,10 @@ export default function Navbar() {
             {servicesDropdown && (
               <div
                 onMouseLeave={() => setServicesDropdown(false)}
-                className="absolute left-0 top-full mt-1 w-80 rounded-2xl border border-slate-100 bg-white p-2.5 shadow-card"
+                className="absolute left-0 top-full mt-2 w-88 rounded-2xl border border-slate-100 bg-white p-3 shadow-xl ring-1 ring-black/5 animate-in fade-in slide-in-from-top-2 duration-150 z-50"
               >
                 <div className="px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                  Dedicated Service Pages
+                  Specialized Services
                 </div>
                 <div className="space-y-1">
                   {SERVICE_PAGES.map((s) => {
@@ -130,42 +125,32 @@ export default function Navbar() {
                       <Link
                         key={s.to}
                         to={s.to}
-                        className="flex items-start gap-3 rounded-xl px-3 py-2 text-xs font-semibold text-navy-800 hover:bg-slate-50 hover:text-brand-600 transition"
+                        className="flex items-start gap-3 rounded-xl px-3 py-2.5 text-xs font-semibold text-navy-900 hover:bg-aqua-50/70 hover:text-aqua-700 transition"
                       >
-                        <IconCmp className="h-4 w-4 text-aqua-600 shrink-0 mt-0.5" />
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-aqua-100/70 text-aqua-700 mt-0.5">
+                          <IconCmp className="h-4 w-4" />
+                        </div>
                         <div>
-                          <p className="font-bold">{s.label}</p>
-                          <p className="text-[11px] font-normal text-slate-500">{s.desc}</p>
+                          <p className="font-bold text-sm text-navy-900">{s.label}</p>
+                          <p className="text-[11px] font-normal text-slate-500 leading-tight">{s.desc}</p>
                         </div>
                       </Link>
                     );
                   })}
                 </div>
-                <div className="mt-2 border-t border-slate-100 pt-2">
+                <div className="mt-2.5 border-t border-slate-100 pt-2">
                   <Link
                     to="/services"
-                    className="flex items-center justify-between rounded-xl px-3 py-2 text-xs font-bold text-brand-600 hover:bg-brand-50 transition"
+                    className="flex items-center justify-between rounded-xl px-3 py-2 text-xs font-bold text-aqua-700 hover:bg-aqua-50 transition"
                   >
-                    <span>View All Services</span>
-                    <Sparkles className="h-3.5 w-3.5 text-aqua-500" />
+                    <span>View All Services Catalog</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                 </div>
               </div>
             )}
           </div>
 
-          <NavLink to="/water-tank-cleaning" className={linkClass}>
-            Water Tank
-          </NavLink>
-          <NavLink to="/ro-water-purifier-cleaning" className={linkClass}>
-            RO Purifier
-          </NavLink>
-          <NavLink to="/bathroom-kitchen-cleaning" className={linkClass}>
-            Bath & Kitchen
-          </NavLink>
-          <NavLink to="/glass-window-cleaning" className={linkClass}>
-            Glass Cleaning
-          </NavLink>
           <NavLink to="/gallery" className={linkClass}>
             Gallery
           </NavLink>
@@ -177,44 +162,23 @@ export default function Navbar() {
           </NavLink>
         </nav>
 
-        {/* Medium Screen (lg) Simplified Nav */}
-        <nav className="hidden items-center gap-1 lg:flex xl:hidden" aria-label="Main Condensed">
-          <NavLink to="/" end className={linkClass}>
-            Home
-          </NavLink>
-          <NavLink to="/about" className={linkClass}>
-            About
-          </NavLink>
-          <NavLink to="/services" className={linkClass}>
-            Services
-          </NavLink>
-          <NavLink to="/water-tank-cleaning" className={linkClass}>
-            Tank Clean
-          </NavLink>
-          <NavLink to="/ro-water-purifier-cleaning" className={linkClass}>
-            RO Purifier
-          </NavLink>
-          <NavLink to="/gallery" className={linkClass}>
-            Gallery
-          </NavLink>
-          <NavLink to="/contact" className={linkClass}>
-            Contact
-          </NavLink>
-        </nav>
-
-        {/* Desktop CTA actions */}
-        <div className="hidden items-center gap-2 lg:flex">
+        {/* Right Action Buttons */}
+        <div className="hidden items-center gap-2.5 lg:flex shrink-0">
           {phone && (
-            <a href={telHref(phone)} className="btn-outline btn-sm">
-              <Phone className="h-4 w-4" /> {phone}
+            <a
+              href={telHref(phone)}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-aqua-200 bg-aqua-50/70 px-3 py-1.5 text-xs font-bold text-navy-950 hover:bg-aqua-100 transition shadow-xs"
+            >
+              <Phone className="h-3.5 w-3.5 text-aqua-600" />
+              <span>{phone}</span>
             </a>
           )}
-          <Link to="/booking" className="btn-primary btn-sm">
-            <CalendarCheck className="h-4 w-4" /> Book a Service
+          <Link to="/booking" className="btn-primary btn-sm shadow-glow">
+            <CalendarCheck className="h-4 w-4" /> Book Service
           </Link>
           <Link
             to="/admin"
-            className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs font-bold text-slate-700 hover:border-brand-500 hover:bg-white hover:text-brand-600 transition"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs font-bold text-slate-600 hover:border-brand-500 hover:bg-white hover:text-brand-600 transition"
             title="Admin Dashboard"
           >
             <Shield className="h-3.5 w-3.5 text-brand-600" />
@@ -222,105 +186,147 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Mobile Action & Hamburger Button */}
+        {/* Mobile Header Buttons */}
         <div className="flex items-center gap-2 lg:hidden">
           {phone && (
             <a
               href={telHref(phone)}
-              className="flex h-10 items-center gap-1.5 rounded-xl bg-aqua-50 border border-aqua-200 px-2.5 py-1 text-xs font-bold text-navy-900 shadow-xs"
+              className="flex h-9 items-center gap-1.5 rounded-xl bg-aqua-50 border border-aqua-200 px-2.5 py-1 text-xs font-bold text-navy-950 shadow-xs"
               aria-label="Call Now"
             >
-              <Phone className="h-3.5 w-3.5 text-brand-600" />
-              <span className="hidden sm:inline">Call</span>
+              <Phone className="h-3.5 w-3.5 text-aqua-600" />
+              <span className="hidden xs:inline">Call</span>
             </a>
           )}
           <Link
             to="/admin"
-            className="flex h-10 items-center gap-1 rounded-xl border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-bold text-slate-700 hover:text-brand-600"
+            className="flex h-9 items-center gap-1 rounded-xl border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-bold text-slate-700"
             title="Admin Login"
           >
             <Shield className="h-3.5 w-3.5 text-brand-600" />
             <span className="hidden xs:inline">Admin</span>
           </Link>
           <button
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-navy-800"
+            className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 text-navy-800 hover:bg-slate-50"
             onClick={() => setOpen((o) => !o)}
             aria-expanded={open}
             aria-controls="mobile-menu"
             aria-label={open ? 'Close menu' : 'Open menu'}
           >
-            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5 text-navy-900" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Drawer Listing All 9 Pages */}
+      {/* Mobile Drawer */}
       {open && (
         <div
           id="mobile-menu"
-          className="absolute inset-x-0 top-16 max-h-[calc(100vh-4rem)] overflow-y-auto border-t border-slate-100 bg-white shadow-card lg:hidden"
+          className="absolute inset-x-0 top-16 max-h-[calc(100vh-4rem)] overflow-y-auto border-t border-slate-100 bg-white shadow-2xl lg:hidden"
         >
-          <nav className="container-x flex flex-col gap-1 py-4" aria-label="Mobile">
+          <nav className="container-x flex flex-col gap-1 py-4" aria-label="Mobile Navigation">
             {/* Quick Admin Access Card */}
-            <div className="mb-2 flex items-center justify-between rounded-xl bg-brand-50/60 p-2.5 border border-brand-100">
-              <div className="flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-white">
+            <div className="mb-3 flex items-center justify-between rounded-xl bg-aqua-50/70 p-3 border border-aqua-200/60">
+              <div className="flex items-center gap-2.5">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-aqua-600 text-white">
                   <Shield className="h-4 w-4" />
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-navy-900">Admin Control Panel</p>
-                  <p className="text-[11px] text-slate-500">Bookings, content & gallery</p>
+                  <p className="text-xs font-bold text-navy-950">Aqua Ak Admin Panel</p>
+                  <p className="text-[11px] text-slate-500">Manage bookings & services</p>
                 </div>
               </div>
               <Link
                 to="/admin"
-                className="rounded-lg bg-brand-600 px-3 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-brand-700"
+                className="rounded-lg bg-aqua-600 px-3 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-aqua-700"
               >
                 Dashboard
               </Link>
             </div>
 
-            <div className="px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
-              Quick Menu
+            <div className="px-3 py-1 text-xs font-bold uppercase tracking-wider text-slate-400">
+              Navigation
             </div>
-
-            {ALL_WEBSITE_PAGES.map((page) => (
-              <NavLink
-                key={page.to}
-                to={page.to}
-                end={page.to === '/'}
-                className={({ isActive }) =>
-                  `flex items-center justify-between rounded-xl px-4 py-2.5 text-sm font-semibold transition ${
-                    isActive ? 'bg-brand-50 text-brand-600 font-bold' : 'text-navy-800 hover:bg-slate-50'
-                  }`
-                }
-              >
-                <span>{page.label}</span>
-                {page.icon && <page.icon className="h-4 w-4 text-aqua-600" />}
-              </NavLink>
-            ))}
-
             <NavLink
-              to="/locations"
+              to="/"
+              end
               className={({ isActive }) =>
-                `flex items-center justify-between rounded-xl px-4 py-2.5 text-sm font-semibold transition ${
-                  isActive ? 'bg-brand-50 text-brand-600 font-bold' : 'text-navy-800 hover:bg-slate-50'
+                `flex items-center justify-between rounded-xl px-3 py-2 text-sm font-semibold transition ${
+                  isActive ? 'bg-aqua-50 text-aqua-700 font-bold' : 'text-navy-900 hover:bg-slate-50'
                 }`
               }
             >
-              <div className="flex items-center gap-2.5">
-                <MapPin className="h-4 w-4 text-brand-600 ml-1" />
-                <span>Service Locations</span>
-              </div>
+              Home
+            </NavLink>
+            <NavLink
+              to="/about"
+              className={({ isActive }) =>
+                `flex items-center justify-between rounded-xl px-3 py-2 text-sm font-semibold transition ${
+                  isActive ? 'bg-aqua-50 text-aqua-700 font-bold' : 'text-navy-900 hover:bg-slate-50'
+                }`
+              }
+            >
+              About Us
+            </NavLink>
+            <NavLink
+              to="/gallery"
+              className={({ isActive }) =>
+                `flex items-center justify-between rounded-xl px-3 py-2 text-sm font-semibold transition ${
+                  isActive ? 'bg-aqua-50 text-aqua-700 font-bold' : 'text-navy-900 hover:bg-slate-50'
+                }`
+              }
+            >
+              Gallery / Work
+            </NavLink>
+            <NavLink
+              to="/locations"
+              className={({ isActive }) =>
+                `flex items-center justify-between rounded-xl px-3 py-2 text-sm font-semibold transition ${
+                  isActive ? 'bg-aqua-50 text-aqua-700 font-bold' : 'text-navy-900 hover:bg-slate-50'
+                }`
+              }
+            >
+              Service Locations
+            </NavLink>
+            <NavLink
+              to="/contact"
+              className={({ isActive }) =>
+                `flex items-center justify-between rounded-xl px-3 py-2 text-sm font-semibold transition ${
+                  isActive ? 'bg-aqua-50 text-aqua-700 font-bold' : 'text-navy-900 hover:bg-slate-50'
+                }`
+              }
+            >
+              Contact Us
             </NavLink>
 
-            <div className="mt-3 grid gap-2 pt-3 border-t border-slate-100">
-              <Link to="/booking" className="btn-primary">
-                <CalendarCheck className="h-4 w-4" /> Book a Service
+            <div className="mt-3 px-3 py-1 text-xs font-bold uppercase tracking-wider text-slate-400">
+              Services
+            </div>
+            {SERVICE_PAGES.map((s) => {
+              const IconCmp = s.icon;
+              return (
+                <NavLink
+                  key={s.to}
+                  to={s.to}
+                  className={({ isActive }) =>
+                    `flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-semibold transition ${
+                      isActive ? 'bg-aqua-50 text-aqua-700 font-bold' : 'text-navy-900 hover:bg-slate-50'
+                    }`
+                  }
+                >
+                  <IconCmp className="h-4 w-4 text-aqua-600" />
+                  <span>{s.label}</span>
+                </NavLink>
+              );
+            })}
+
+            <div className="mt-4 grid gap-2 pt-3 border-t border-slate-100">
+              <Link to="/booking" className="btn-primary w-full justify-center">
+                <CalendarCheck className="h-4 w-4" /> Book Doorstep Service
               </Link>
               {phone && (
-                <a href={telHref(phone)} className="btn-outline">
-                  <Phone className="h-4 w-4" /> Call {phone}
+                <a href={telHref(phone)} className="btn-outline w-full justify-center">
+                  <Phone className="h-4 w-4 text-aqua-600" /> Call {phone}
                 </a>
               )}
             </div>
